@@ -1,0 +1,48 @@
+.expand-list-item {
+  position: relative;
+  height: 30px;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  padding: 5px 5px;
+  font-family: 'OpenSansRegular', 'sans-serif';
+  &:hover {
+    background-color: #cce2fa;
+    cursor: pointer;
+  }
+  &.open {
+    &::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: transparent url("../../../../assets/img/close-expand.png") no-repeat;
+      background-size: 100% 100%;
+      top: 5px;
+      right: 5px;
+      display: inline-block;
+    }
+  }
+  &.close {
+    &::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: transparent url("../../../../assets/img/open-expand.png") no-repeat;
+      background-size: 100% 100%;
+      top: 5px;
+      right: 5px;
+      display: inline-block;
+    }
+  }
+  &.searched {
+    background-color: greenyellow;
+    &:hover {
+      background-color: #cce2fa;
+      cursor: pointer;
+    }
+  }
+}
+
