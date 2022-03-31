@@ -1,10 +1,11 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {Dispatch, FC, SetStateAction, useRef, useState} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import {Editor as TinyMCEEditor} from 'tinymce';
 import DropDownWrapper from "../DropDownWrapper/DropDownWrapper";
 import AutocompleteType from "../Controls/AutocompleteType/AutocompleteType";
 import './HTMLEditor.scss';
 import {cloneNode} from "../../services/dom.service";
+import {ListItems} from "../../interfaces/interfaces";
 
 const simpleDoc = `
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -168,12 +169,20 @@ const simpleDoc = `
 \t<br/>
 `
 
-const HtmlEditor = () => {
+interface HtmlEditorProps {
+    setViewObj: Dispatch<SetStateAction<ListItems | undefined>>
+}
+
+const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
 
     const editorRef = useRef<TinyMCEEditor | null>(null)
     const [openDropDown, setOpenDropDown] = useState(false)
     const [positionDropDown, setPositionDropDown] = useState<{ x: number, y: number }>({x: 0, y: 0})
     const [dropDownRender, setDropDownRender] = useState<JSX.Element>()
+
+    const checkUndefined = (str: string | undefined | ListItems) => {
+        return str ? str : ''
+    }
 
     const handleEditorSetup = (editor: TinyMCEEditor) => {
 
@@ -190,27 +199,82 @@ const HtmlEditor = () => {
                             x: x - (200 - width),
                             y: y + height
                         })
-                        setDropDownRender(<AutocompleteType editor={editorRef.current} setOpenDropDown={setOpenDropDown}/>)
+                        setDropDownRender(<AutocompleteType editor={editorRef.current}
+                                                            setOpenDropDown={setOpenDropDown}/>)
                         setOpenDropDown(prev => !prev)
                     }
                 }
             }
         })
-        
+
         editor.ui.registry.addButton('myViewButton', {
             text: 'Показать превью',
             onAction: (api) => {
+                let newViewObj: ListItems = {}
                 const tinyIframe = document.querySelector('iframe')?.contentDocument
                 if (tinyIframe) {
                     const allTypes: NodeListOf<HTMLDivElement> = tinyIframe.querySelectorAll('.__typed__')
                     if (allTypes.length !== 0) {
                         allTypes.forEach(typedElement => {
                             const cloneTypedElement = cloneNode(typedElement)
-                            const type: HTMLSpanElement | null = cloneTypedElement.querySelector('.__typed_span__')
-                            console.log(type?.innerText)
-                            type?.remove()
-                            console.log(cloneTypedElement.innerText)
+                            const spanElement: HTMLSpanElement | null = cloneTypedElement.querySelector('.__typed_span__')
+                            const type = spanElement?.innerText.toLowerCase()
+                            spanElement?.remove()
+                            const typedText = cloneTypedElement.innerText
+                            switch (type) {
+                                case 'подкарантинный объект':
+                                    newViewObj = {
+                                        ...newViewObj,
+                                        'Подкарантинный объект': checkUndefined(newViewObj['Подкарантинный объект']) + ' ' + typedText
+                                    }
+                                    break;
+                                case 'маркировка':
+                                    newViewObj = {
+                                        ...newViewObj,
+                                        'Упаковка': {
+                                            ...(newViewObj['Упаковка'] as ListItems),
+                                            'Маркировка': checkUndefined((newViewObj['Упаковка'] as ListItems)?.['Маркировка']) + ' ' + typedText
+                                        }
+                                    }
+                                    break;
+                                case 'условия':
+                                    newViewObj = {
+                                        ...newViewObj,
+                                        'Упаковка': {
+                                            ...(newViewObj['Упаковка'] as ListItems),
+                                            'Условия': checkUndefined((newViewObj['Упаковка'] as ListItems)?.['Условия']) + ' ' + typedText
+                                        }
+                                    }
+                                    break;
+                                case 'экспорт':
+                                    newViewObj = {
+                                        ...newViewObj,
+                                        'Упаковка': {
+                                            ...(newViewObj['Упаковка'] as ListItems),
+                                            'Требования': {
+                                                ...((newViewObj['Упаковка'] as ListItems)?.['Требования'] as ListItems),
+                                                'Требования к экспорту': checkUndefined(((newViewObj['Упаковка'] as ListItems)?.['Требования'] as ListItems)?.['Требования к экспорту']) + ' ' + typedText
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case 'импорт':
+                                    newViewObj = {
+                                        ...newViewObj,
+                                        'Упаковка': {
+                                            ...(newViewObj['Упаковка'] as ListItems),
+                                            'Требования': {
+                                                ...((newViewObj['Упаковка'] as ListItems)?.['Требования'] as ListItems),
+                                                'Требования к импорту': checkUndefined(((newViewObj['Упаковка'] as ListItems)?.['Требования'] as ListItems)?.['Требования к импорту']) + ' ' + typedText
+                                            }
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    return null
+                            }
                         })
+                        setViewObj(newViewObj)
                     }
                 }
             }
