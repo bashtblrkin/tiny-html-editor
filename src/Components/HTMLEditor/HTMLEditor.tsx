@@ -1,11 +1,13 @@
-import React, {Dispatch, FC, SetStateAction, useRef, useState} from 'react';
+import React, {Dispatch, FC, SetStateAction, useEffect, useRef, useState} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import {Editor as TinyMCEEditor} from 'tinymce';
 import DropDownWrapper from "../DropDownWrapper/DropDownWrapper";
 import AutocompleteType from "../Controls/AutocompleteType/AutocompleteType";
+import TypesHistoryList from '../TypesHistoryList/TypesHistoryList';
 import './HTMLEditor.scss';
 import {cloneNode} from "../../services/dom.service";
 import {ListItems} from "../../interfaces/interfaces";
+import {createPortal} from "react-dom";
 
 const simpleDoc = `
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -170,19 +172,24 @@ const simpleDoc = `
 `
 
 interface HtmlEditorProps {
-    setViewObj: Dispatch<SetStateAction<ListItems | undefined>>
+    /*setViewObj: Dispatch<SetStateAction<ListItems | undefined>>*/
+    setViewObj: (items: ListItems | undefined) => void
 }
 
 const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
 
     const editorRef = useRef<TinyMCEEditor | null>(null)
+    const [toolbarContainer, setToolbarContainer] = useState<Element | null>(null)
     const [openDropDown, setOpenDropDown] = useState(false)
     const [positionDropDown, setPositionDropDown] = useState<{ x: number, y: number }>({x: 0, y: 0})
     const [dropDownRender, setDropDownRender] = useState<JSX.Element>()
+    const [historyList, setHistoryList] = useState<Set<{ title: string, func: () => void }>>(new Set())
 
     const checkUndefined = (str: string | undefined | ListItems) => {
         return str ? str : ''
     }
+
+    useEffect(() => {console.log(toolbarContainer)}, [toolbarContainer])
 
     const handleEditorSetup = (editor: TinyMCEEditor) => {
 
@@ -200,7 +207,9 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
                             y: y + height
                         })
                         setDropDownRender(<AutocompleteType editor={editorRef.current}
-                                                            setOpenDropDown={setOpenDropDown}/>)
+                                                            setOpenDropDown={setOpenDropDown}
+                                                            addHistoryItem={setHistoryList}
+                        />)
                         setOpenDropDown(prev => !prev)
                     }
                 }
@@ -282,6 +291,11 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
 
     }
 
+    const handleInit = (event: {[p: string]: any}, editor: TinyMCEEditor) => {
+        editorRef.current = editor
+        setToolbarContainer(document.querySelector('.tox-toolbar__primary'))
+    }
+
     const handleClickAway = () => {
         if (openDropDown) {
             setOpenDropDown(false)
@@ -291,9 +305,7 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
     return (
         <>
             <Editor
-                onInit={(event, editor: TinyMCEEditor) => {
-                    editorRef.current = editor
-                }}
+                onInit={handleInit}
                 initialValue={simpleDoc}
                 init={{
                     height: 900,
@@ -315,8 +327,9 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
             />
             <DropDownWrapper position={positionDropDown} open={openDropDown}
                              renderComponent={dropDownRender} handleClickAway={handleClickAway}/>
+            <TypesHistoryList history={historyList}/>
         </>
     )
 };
 
-export default HtmlEditor;
+export default React.memo(HtmlEditor);

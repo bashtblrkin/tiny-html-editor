@@ -10,10 +10,10 @@ const ThreeView: FC<ThreeViewProps> = ({items}) => {
 
     const three = Object.keys(items).map((key, i) => {
         if (typeof items[key] === 'string') {
-            return <AccordionList title={key} detail={items[key] as string} />
+            return <AccordionList title={key} detail={items[key] as string} key={key}/>
         }
         if (typeof items[key] === 'object') {
-            return <AccordionList title={key} detail={<ThreeView items={items[key] as ListItems}/>} />
+            return <AccordionList title={key} detail={<ThreeView items={items[key] as ListItems}/>} key={key}/>
         }
     })
 

@@ -1,0 +1,14 @@
+.typed-history-list {
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    max-width: 50%;
+    display: inline-flex;
+    flex-direction: row;
+    border: 1px solid #cce2fa;
+    border-radius: 5px;
+    padding: 6px 5px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    z-index: 1;
+}

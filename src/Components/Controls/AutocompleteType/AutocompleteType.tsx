@@ -7,6 +7,7 @@ import SearchInput from "../SearchInput/SearchInput";
 interface AutocompleteTypeProps {
     editor: TinyMCEEditor | null
     setOpenDropDown: Dispatch<SetStateAction<boolean>>
+    addHistoryItem: Dispatch<SetStateAction<Set<{ title: string, func: () => void }>>>
 }
 
 const initialState: ListItems = {
@@ -21,7 +22,7 @@ const initialState: ListItems = {
     }
 }
 
-const AutocompleteType: FC<AutocompleteTypeProps> = ({editor, setOpenDropDown}) => {
+const AutocompleteType: FC<AutocompleteTypeProps> = ({editor, setOpenDropDown, addHistoryItem}) => {
 
     const [listItems, setListItems] = useState<ListItems>(initialState)
     const [expanded, setExpanded] = useState(false)
@@ -49,6 +50,10 @@ const AutocompleteType: FC<AutocompleteTypeProps> = ({editor, setOpenDropDown}) 
                 class: "__typed__"
             }, innerHTML))
             setOpenDropDown(false)
+            addHistoryItem(prev => new Set(prev).add({
+                title: type,
+                func: () => {console.log('Work')}
+            }))
         }
     }
 

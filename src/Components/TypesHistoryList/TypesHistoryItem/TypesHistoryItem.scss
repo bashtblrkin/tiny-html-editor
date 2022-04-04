@@ -1,0 +1,20 @@
+.typed-history-item {
+  display: flex;
+  height: 30px;
+  white-space: nowrap;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-right: 5px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  font-size: 14px;
+  background-color: #cce2fa;
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: deepskyblue;
+    cursor: pointer;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
