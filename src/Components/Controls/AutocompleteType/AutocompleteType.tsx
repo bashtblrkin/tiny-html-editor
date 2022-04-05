@@ -3,11 +3,13 @@ import {Editor as TinyMCEEditor} from 'tinymce';
 import {ListItems} from '../../../interfaces/interfaces';
 import List from "../List/List";
 import SearchInput from "../SearchInput/SearchInput";
+import {pasteNewContent} from "../../../services/dom.service";
+import {validateDataHistory} from "../../../services/saveData.service";
 
 interface AutocompleteTypeProps {
     editor: TinyMCEEditor | null
     setOpenDropDown: Dispatch<SetStateAction<boolean>>
-    addHistoryItem: Dispatch<SetStateAction<Set<{ title: string, func: () => void }>>>
+    addHistoryItem: Dispatch<SetStateAction<{ title: string, func: () => void }[]>>
 }
 
 const initialState: ListItems = {
@@ -29,31 +31,10 @@ const AutocompleteType: FC<AutocompleteTypeProps> = ({editor, setOpenDropDown, a
 
     const handleClick = (type: string) => () => {
         if (editor) {
-            const node = editor.selection.getContent()
-            const styleForSpan = `
-                display: inline;
-                position: absolute;
-                right: 0;
-                top: -15px;
-                text-indent: 0;
-                font-size: 12px;
-                font-weight: 300;           
-                white-space: nowrap;
-            `
-            const innerHTML = `${node}<span style="${styleForSpan}" class="__typed_span__">${type}</span>`
-            editor.selection.setNode(editor.dom.create('div', {
-                style: `position: relative;
-                    display: inline;
-                    border: 2px solid #cce2fa;
-                    padding: 2px;
-                    border-radius: 3px;`,
-                class: "__typed__"
-            }, innerHTML))
-            setOpenDropDown(false)
-            addHistoryItem(prev => new Set(prev).add({
-                title: type,
-                func: () => {console.log('Work')}
-            }))
+            pasteNewContent(editor, type, setOpenDropDown)
+            addHistoryItem((prev) =>
+                validateDataHistory(prev, type, () => pasteNewContent(editor, type, setOpenDropDown))
+            )
         }
     }
 

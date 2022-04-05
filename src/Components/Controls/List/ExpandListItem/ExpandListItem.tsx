@@ -6,9 +6,10 @@ import {useSearchedType} from "../../../../hooks/useSearchedType";
 interface ExpandListItemProps {
     nameGroup: string
     expanded: boolean
+    paddingTitle?: number
 }
 
-const ExpandListItem: FC<ExpandListItemProps> = ({nameGroup, expanded, children}) => {
+const ExpandListItem: FC<ExpandListItemProps> = ({nameGroup, expanded, children, paddingTitle}) => {
 
     const [open, setOpen] = useState(false)
     const [checkIsSearch, convertTypeIfSearched] = useSearchedType(nameGroup)
@@ -24,7 +25,7 @@ const ExpandListItem: FC<ExpandListItemProps> = ({nameGroup, expanded, children}
     return (
         <>
             <div className={cn("expand-list-item", {"open": open, "close": !open}, {"searched": checkIsSearch})} onClick={handleClick}>
-                {convertTypeIfSearched}
+                <p style={{marginLeft: paddingTitle}}>{convertTypeIfSearched}</p>
             </div>
             <div>
                 {open && children}

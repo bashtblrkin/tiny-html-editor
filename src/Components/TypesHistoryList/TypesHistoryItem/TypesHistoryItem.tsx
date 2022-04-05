@@ -3,11 +3,12 @@ import './TypesHistoryItem.scss';
 
 interface TypesHistoryItemProps {
     title: string
+    addType: () => void
 }
 
-const TypesHistoryItem: FC<TypesHistoryItemProps> = ({title}) => {
+const TypesHistoryItem: FC<TypesHistoryItemProps> = ({title, addType}) => {
     return (
-        <div className="typed-history-item">
+        <div className="typed-history-item" onClick={addType}>
             {title}
         </div>
     );
