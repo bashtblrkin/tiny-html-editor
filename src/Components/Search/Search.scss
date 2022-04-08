@@ -1,0 +1,44 @@
+@import "./src/shared/variables";
+
+.search {
+  grid-area: search;
+  display: flex;
+  & input {
+    height: 35px;
+    width: 430px;
+    outline: none;
+    border: 1px solid $greyColor;
+    border-radius: 10px 0 0 10px;
+    padding: 6px 15px;
+    font-family: 'MontserratMedium', 'sans-serif';
+    font-size: 16px;
+    color: $textColor;
+    &::placeholder {
+      font-family: 'MontserratMedium', 'sans-serif';
+      font-size: 16px;
+      color: $greyColor;
+    }
+    &:focus {
+      border-color: $greenLightColor;
+    }
+  }
+  & button {
+    height: 35px;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $greyColor;
+    border-left: 0;
+    border-radius: 0 10px 10px 0;
+    background-color: transparent;
+    padding: 0;
+    &:hover {
+      cursor: pointer;
+    }
+    & img {
+      width: 32px;
+      height: 26px;
+    }
+  }
+}

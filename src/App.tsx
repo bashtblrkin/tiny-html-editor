@@ -1,23 +1,22 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {HTMLEditor} from "./Components";
-import {ListItems} from "./interfaces/interfaces";
-import ThreeView from "./Components/ThreeView/ThreeView";
+import React from 'react';
+import {Routes, Route} from 'react-router-dom'
+import Layout from "./Pages/Layout";
+import HomePage from "./Pages/HomePage";
+import RequirementsPage from './Pages/ RequirementsPage';
+import EditorPage from "./Pages/EditorPage";
+import NotFoundPage from "./Pages/NotFoundPage";
 
 function App() {
 
-    const [viewObj, setViewObj] = useState<ListItems>()
-
-    const handleSetView = useCallback((items: ListItems | undefined) => {
-        setViewObj(items)
-    }, [])
-
     return (
-        <>
-            <HTMLEditor setViewObj={handleSetView}/>
-            {viewObj && <div style={{padding: '20px 10px'}}>
-                <ThreeView items={viewObj}/>
-            </div>}
-        </>
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="requirements" element={<RequirementsPage />}/>
+                <Route path="editor" element={<EditorPage />}/>
+                <Route path="*" element={<NotFoundPage />} />
+            </Route>
+        </Routes>
     );
 }
 

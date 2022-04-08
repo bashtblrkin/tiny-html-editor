@@ -1,0 +1,18 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 270px auto;
+  grid-template-rows: 1fr;
+}
+
+.req-wrap {
+  padding: 0 55px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 2fr 1.5fr 1.5fr 2fr;
+  grid-template-rows: 160px auto;
+  column-gap: 60px;
+  grid-template-areas:
+    "search . . ."
+    "rl rl rl rl";
+}

@@ -17,7 +17,7 @@ export const pasteNewContent = (editor: TinyMCEEditor, type: string, closeDropDo
                 font-weight: 300;           
                 white-space: nowrap;
             `
-    const innerHTML = `${node}<span style="${styleForSpan}" class="__typed_span__">${type}</span>`
+    const innerHTML = `${node}<span style="${styleForSpan}" class="__typed_span__" contentEditable="false">${type}</span>`
     editor.selection.setNode(editor.dom.create('span', {
         style: `position: relative;
                     display: inline;
@@ -30,14 +30,16 @@ export const pasteNewContent = (editor: TinyMCEEditor, type: string, closeDropDo
 }
 
 export const deleteTypeContent = (editor: TinyMCEEditor) => {
-    const node = editor.selection.getNode()
-    const newNode = cloneNode<HTMLSpanElement>(node as HTMLSpanElement)
-    node.remove()
-    const innerSpan = newNode.querySelector('.__typed_span__')
+
+    const node = (editor.selection.getNode() as HTMLSpanElement).closest('.__typed__')
+
+    if (!node) return
+    const innerSpan = node.querySelector<HTMLSpanElement>('.__typed_span__')
 
     if (!innerSpan) return
 
     innerSpan.remove()
-    const innerText = newNode.innerText
-    editor.selection.setContent(innerText)
+    const innerHTML = node.innerHTML
+    node.remove()
+    editor.selection.setContent(innerHTML)
 }

@@ -1,0 +1,28 @@
+@import '../../../shared/variables';
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 234px;
+  height: 42px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+  &:hover {
+    background: linear-gradient(89.85deg, rgba(141, 228, 175, 0.28) 0.1%, rgba(141, 228, 175, 0) 149.74%);
+    cursor: pointer;
+  }
+  &.active {
+    background: linear-gradient(89.85deg, rgba(141, 228, 175, 0.28) 0.1%, rgba(141, 228, 175, 0) 149.74%);
+  }
+  & img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
+  & p {
+    font-family: 'MontserratMedium', 'sans-serif';
+    font-size: 16px;
+    color: $textColor;
+  }
+}
