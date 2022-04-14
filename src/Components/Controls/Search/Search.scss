@@ -1,4 +1,4 @@
-@import "./src/shared/variables";
+@import "../../../shared/variables";
 
 .search {
   grid-area: search;
@@ -35,6 +35,7 @@
     padding: 0;
     &:hover {
       cursor: pointer;
+      opacity: 0.8;
     }
     & img {
       width: 32px;

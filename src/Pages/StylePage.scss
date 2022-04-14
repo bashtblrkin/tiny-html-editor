@@ -1,3 +1,5 @@
+@import "src/shared/variables";
+
 .wrapper {
   display: grid;
   grid-template-columns: 270px auto;
@@ -5,7 +7,7 @@
 }
 
 .req-wrap {
-  padding: 0 55px;
+  padding: 0 55px 45px 55px;
   display: grid;
   justify-items: center;
   align-items: center;
@@ -15,4 +17,10 @@
   grid-template-areas:
     "search . . ."
     "rl rl rl rl";
+}
+
+hr {
+  background-color: $greyColor;
+  border: none;
+  height: 1px;
 }

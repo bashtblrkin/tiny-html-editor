@@ -7,10 +7,11 @@ import TypesHistoryList from '../TypesHistoryList/TypesHistoryList';
 import './HTMLEditor.scss';
 import {cloneNode, deleteTypeContent} from "../../services/dom.service";
 import {ListItems} from "../../interfaces/interfaces";
-import {useGetDoc} from "../../hooks/fetch.hooks";
+import {useParams} from "react-router-dom";
+import {useFetch} from "../../hooks/fetch.hooks";
+import {host} from "../../Environment";
 
 interface HtmlEditorProps {
-    /*setViewObj: Dispatch<SetStateAction<ListItems | undefined>>*/
     setViewObj: (items: ListItems | undefined) => void
 }
 
@@ -23,19 +24,12 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
     const [dropDownRender, setDropDownRender] = useState<JSX.Element>()
     const [historyList, setHistoryList] = useState<{ title: string, func: () => void }[]>([])
 
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const {id} = useParams()
+    const {loading, data, error} = useFetch<string>(`${host}/converter?id=${id}`, useCallback(resp => resp.text(), []))
 
     const checkUndefined = (str: string | undefined | ListItems) => {
         return str ? str : ''
     }
-
-    const getDoc = useCallback(async () => {
-        setLoading(true)
-        const doc = await fetch(`http://192.168.0.54/html`).then(res => res.text())
-        setDoc(doc)
-        setLoading(false)
-    }, [])
 
     const handleEditorSetup = (editor: TinyMCEEditor) => {
 
@@ -135,12 +129,12 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
             }
         })
 
-        editor.ui.registry.addButton('getContentButton', {
+        /*editor.ui.registry.addButton('getContentButton', {
             text: 'Получить документ',
             onAction: (api) => {
                 getDoc().catch(setError)
             }
-        })
+        })*/
 
         editor.ui.registry.addButton('deleteContentType', {
             text: 'Удалить тип',
@@ -168,15 +162,16 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
         <>
             <Editor
                 onInit={handleInit}
-                initialValue={doc}
+                initialValue={data}
                 init={{
                     height: 900,
                     menubar: false,
                     plugins: [
                         'advlist autolink lists link image charmap print preview anchor',
                         'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code help wordcount'
+                        'insertdatetime media table paste code help wordcount fullpage'
                     ],
+                    valid_children: "+body[style]",
                     toolbar: 'undo redo | formatselect | ' +
                         'bold italic backcolor | alignleft aligncenter ' +
                         'alignright alignjustify | bullist numlist outdent indent | ' +

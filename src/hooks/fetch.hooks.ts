@@ -1,23 +1,24 @@
 import {useEffect, useState} from "react";
 
-export const useGetDoc = (uri: string) => {
+export const useFetch = <T>(uri: string, callbackResponse: (resp: Response) => Promise<any>) => {
 
-    const [data, setData] = useState('');
+    const [data, setData] = useState<T>();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!uri) return
         fetch(uri)
-            .then(data => data.text())
+            .then(callbackResponse)
             .then(setData)
             .then(() => setLoading(false))
             .catch(setError)
-    }, [uri])
+    }, [callbackResponse, uri])
 
     return {
         loading,
         data,
-        error
+        error,
+        setData
     }
 }

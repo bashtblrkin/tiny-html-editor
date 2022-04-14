@@ -1,0 +1,23 @@
+@import "src/shared/variables";
+
+.req-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  &-group {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.item-info-text {
+  font-family: 'MontserratRegular', 'sans-serif';
+  font-size: 14px;
+  color: $greyColor;
+  letter-spacing: 0.05em;
+}
+
+.success {
+  color: $textColor;
+}

@@ -1,11 +1,46 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import './RequirementsList.scss';
+import {host} from "../../Environment";
+import {useFetch} from "../../hooks/fetch.hooks";
+import {RequirementItem} from "../../interfaces/interfaces";
+import RequirementsItem from "./RequirementsItem/RequirementsItem";
+
+const requirement = {
+    id: '1',
+    name: 'My Title WoW'
+}
 
 const RequirementsList = () => {
+
+    const { data, loading, error, setData } = useFetch<RequirementItem[]>(`${host}/converter/all`, useCallback(resp => resp.json(), []))
+
+    if (loading) {
+        return (
+            <div className="req-list">
+                Загрузка...
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="req-list">
+                Ошибка. Повторите попытку позже.
+            </div>
+        )
+    }
+
     return (
         <div className="req-list">
-            
+            <RequirementsItem requirement={requirement} docStatus={'notDoc'} setData={setData} />
+            <hr/>
+            {data && data.map((requirement, idx) => {
+                return (<div key={requirement.id}>
+                    <RequirementsItem requirement={requirement} docStatus={requirement.id ? 'exist' : 'notDoc'} setData={setData}/>
+                    {idx !== data.length - 1 && <hr/>}
+                    </div>)
+            })}
         </div>
     );
 };

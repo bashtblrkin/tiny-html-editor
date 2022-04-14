@@ -1,0 +1,16 @@
+.button-img {
+  width: 42px;
+  height: 42px;
+  margin-left: 15px;
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+  &.disabled {
+    opacity: 0.3;
+    &:hover {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+}
