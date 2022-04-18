@@ -13,7 +13,7 @@ const requirement = {
 
 const RequirementsList = () => {
 
-    const { data, loading, error, setData } = useFetch<RequirementItem[]>(`${host}/converter/all`, useCallback(resp => resp.json(), []))
+    const { data, loading, error, setData } = useFetch<RequirementItem[]>(`${host}/Requirement/all`, useCallback(resp => resp.json(), []))
 
     if (loading) {
         return (
@@ -33,8 +33,6 @@ const RequirementsList = () => {
 
     return (
         <div className="req-list">
-            <RequirementsItem requirement={requirement} docStatus={'notDoc'} setData={setData} />
-            <hr/>
             {data && data.map((requirement, idx) => {
                 return (<div key={requirement.id}>
                     <RequirementsItem requirement={requirement} docStatus={requirement.id ? 'exist' : 'notDoc'} setData={setData}/>

@@ -1,4 +1,4 @@
-import React, {Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
+import React, {Dispatch, FC, SetStateAction, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import {Editor as TinyMCEEditor} from 'tinymce';
 import DropDownWrapper from "../DropDownWrapper/DropDownWrapper";
@@ -8,8 +8,8 @@ import './HTMLEditor.scss';
 import {cloneNode, deleteTypeContent} from "../../services/dom.service";
 import {ListItems} from "../../interfaces/interfaces";
 import {useParams} from "react-router-dom";
-import {useFetch} from "../../hooks/fetch.hooks";
 import {host} from "../../Environment";
+import {ConnectionContext} from "../../Context/context";
 
 interface HtmlEditorProps {
     setViewObj: (items: ListItems | undefined) => void
@@ -23,9 +23,43 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
     const [positionDropDown, setPositionDropDown] = useState<{ x: number, y: number }>({x: 0, y: 0})
     const [dropDownRender, setDropDownRender] = useState<JSX.Element>()
     const [historyList, setHistoryList] = useState<{ title: string, func: () => void }[]>([])
+    const [data, setData] = useState<string>('')
 
     const {id} = useParams()
-    const {loading, data, error} = useFetch<string>(`${host}/converter?id=${id}`, useCallback(resp => resp.text(), []))
+    const {connection} = useContext(ConnectionContext)
+
+    useEffect(() => {
+        let error = ''
+        fetch(`${host}/Requirement/download`, {
+            method: 'POST',
+            body: JSON.stringify({
+                clientId: connection?.connectionId,
+                documentId: id
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => {
+                if (res.status === 400) {
+                    error = '213'
+                }
+                return res.text()
+            })
+            .then(data => setData(data))
+            .catch(error => {
+                console.log(error);
+            })
+
+        return () => {
+            if (!error) {
+                connection?.invoke('AccessDocument',{
+                    Status: false,
+                    DocumentId: id
+                })
+            }
+        }
+    }, [connection, id])
 
     const checkUndefined = (str: string | undefined | ListItems) => {
         return str ? str : ''

@@ -6,12 +6,13 @@ interface ButtonWithIconProps {
     icon: string
     alt: string
     title: string
+    handleClick?: () => void
 }
 
-const ButtonWithIcon: FC<ButtonWithIconProps> = ({icon, alt, title}) => {
+const ButtonWithIcon: FC<ButtonWithIconProps> = ({icon, alt, title, handleClick}) => {
 
     return (
-        <div className="button-with-icon">
+        <div className="button-with-icon" onClick={handleClick}>
             <img src={icon} alt={alt}/>
             <p>{title}</p>
         </div>

@@ -15,12 +15,14 @@ const UploadFileBtn: FC<UploadFileBtnProps> = ({id,imgSrc, alt, onChange}) => {
         event.preventDefault()
 
         const formData = new FormData()
-        if (!event.target.files) return
 
+        if (!event.target.files) return
         let file = event.target.files[0];
-        formData.append("docx", file)
-        formData.entries()
+
+        formData.append("file", file)
+        formData.append("idRequirement", id)
         onChange(formData)
+
     }
 
 

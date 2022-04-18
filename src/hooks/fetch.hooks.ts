@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {memo, useEffect, useState} from "react";
 
 export const useFetch = <T>(uri: string, callbackResponse: (resp: Response) => Promise<any>) => {
 

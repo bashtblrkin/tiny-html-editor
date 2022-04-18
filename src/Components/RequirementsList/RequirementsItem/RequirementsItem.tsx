@@ -41,7 +41,7 @@ const RequirementsItem: FC<RequirementsItemProps> = ({requirement, docStatus, se
             }
         };
 
-        xhr.open("POST", `${host}/converter`, true)
+        xhr.open("POST", `${host}/Requirement/upload`, true)
         xhr.responseType = 'json';
         xhr.send(formData)
 
