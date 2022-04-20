@@ -1,0 +1,17 @@
+@import "./src/shared/variables";
+
+.control-input {
+  background: transparent;
+  outline: none;
+  border: 1px solid $greyColor;
+  padding: 5px 10px;
+  border-radius: 10px;
+  height: 37px;
+  font-family: 'MontserratMedium', 'sans-serif';
+  font-size: 16px;
+  color: $textColor;
+  transition: border-color 0.2s ease;
+  &:focus {
+    border-color: $greenLightColor;
+  }
+}

@@ -50,16 +50,9 @@ const RequirementsItem: FC<RequirementsItemProps> = ({requirement, docStatus, se
                 setError(xhr.statusText)
             } else {
                 setStatusDoc('ok')
-                setData(prev => {
-                    if (prev) {
-                        console.log('saveData')
-                        return [...prev, xhr.response]
-                    } else {
-                        return [xhr.response]
-                    }
-                })
             }
         };
+
         xhr.onerror = function() {
             setError(xhr.statusText)
         };

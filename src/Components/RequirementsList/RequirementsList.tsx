@@ -6,11 +6,6 @@ import {useFetch} from "../../hooks/fetch.hooks";
 import {RequirementItem} from "../../interfaces/interfaces";
 import RequirementsItem from "./RequirementsItem/RequirementsItem";
 
-const requirement = {
-    id: '1',
-    name: 'My Title WoW'
-}
-
 const RequirementsList = () => {
 
     const { data, loading, error, setData } = useFetch<RequirementItem[]>(`${host}/Requirement/all`, useCallback(resp => resp.json(), []))

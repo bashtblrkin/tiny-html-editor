@@ -26,10 +26,12 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
     const [data, setData] = useState<string>('')
 
     const {id} = useParams()
-    const {connection} = useContext(ConnectionContext)
+    const {connection, connID} = useContext(ConnectionContext)
 
     useEffect(() => {
         let error = ''
+        console.log('serverConnection: ', connID)
+        console.log('myConnection', connection?.connectionId)
         fetch(`${host}/Requirement/download`, {
             method: 'POST',
             body: JSON.stringify({

@@ -24,3 +24,10 @@ hr {
   border: none;
   height: 1px;
 }
+
+.req-form-wrap {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 125px 32px 48px 111px 43px 20px 90px 70px 20px;
+  grid-gap: 20px;
+}
