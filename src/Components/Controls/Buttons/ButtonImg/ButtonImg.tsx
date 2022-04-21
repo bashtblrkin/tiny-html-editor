@@ -13,12 +13,12 @@ interface ButtonImgProps {
 const ButtonImg: FC<ButtonImgProps> = ({imgSrc, alt, status, onClick}) => {
 
     const handleClick = () => {
-        if (status && status !== 'ok' && status !== 'exist') return
+        if (status && status !== 'SuccessFetch' && status !== 'Exist') return
         onClick()
     }
 
     return (
-        <img src={imgSrc} alt={alt} className={cn('button-img', {disabled: status !== 'ok' && status !== 'exist'})} onClick={handleClick}/>
+        <img src={imgSrc} alt={alt} className={cn('button-img', {disabled: status !== 'SuccessFetch' && status !== 'Exist'})} onClick={handleClick}/>
     );
 };
 

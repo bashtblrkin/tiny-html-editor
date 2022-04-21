@@ -1,4 +1,4 @@
-import React, {Dispatch, FC, SetStateAction, useCallback} from 'react';
+import React, {Dispatch, FC, SetStateAction, useCallback, useEffect} from 'react';
 import CustomCheckbox from "../../Controls/CustomCheckboxWithLabel/CustomCheckbox";
 import ButtonImg from "../../Controls/Buttons/ButtonImg/ButtonImg";
 import uploadImg from '../../../assets/img/upload_doc.svg';
@@ -26,16 +26,21 @@ const RequirementsItem: FC<RequirementsItemProps> = ({requirement, docStatus, se
     const [statusDoc, setStatusDoc] = React.useState(docStatus)
     const [error, setError] = React.useState<string>('')
 
+    //Когда меняется статус документа через сокет, устанавливем локальный статус документа
+    useEffect(() => {
+        setStatusDoc(docStatus)
+    }, [docStatus])
+
     const uploadFile = useCallback(async (formData: FormData) => {
 
-        setStatusDoc('loading')
+        setStatusDoc('Loading')
         let xhr = new XMLHttpRequest();
 
         xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
                 const progress = Math.round((event.loaded/event.total) * 100)
                 if (progress >= 100) {
-                    setStatusDoc('treatment')
+                    setStatusDoc('Treatment')
                 }
                 setProgress(progress)
             }
@@ -49,7 +54,7 @@ const RequirementsItem: FC<RequirementsItemProps> = ({requirement, docStatus, se
             if (xhr.status !== 200) {
                 setError(xhr.statusText)
             } else {
-                setStatusDoc('ok')
+                setStatusDoc('SuccessFetch')
             }
         };
 
@@ -57,14 +62,14 @@ const RequirementsItem: FC<RequirementsItemProps> = ({requirement, docStatus, se
             setError(xhr.statusText)
         };
 
-    }, [setData])
+    }, [])
 
     const navigate = useNavigate()
 
     return (
         <div className="req-item">
             <div>
-                <CustomCheckbox id={id} renderLabel={() => name}/>
+                <CustomCheckbox id={id} renderLabel={() => name} setData={setData}/>
             </div>
             <div className="req-item-group">
                 <StatusRequirementItem status={statusDoc} progress={progress}/>

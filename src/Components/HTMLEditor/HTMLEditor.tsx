@@ -18,7 +18,6 @@ interface HtmlEditorProps {
 const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
 
     const editorRef = useRef<TinyMCEEditor | null>(null)
-    const [doc, setDoc] = useState('')
     const [openDropDown, setOpenDropDown] = useState(false)
     const [positionDropDown, setPositionDropDown] = useState<{ x: number, y: number }>({x: 0, y: 0})
     const [dropDownRender, setDropDownRender] = useState<JSX.Element>()
@@ -26,11 +25,10 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
     const [data, setData] = useState<string>('')
 
     const {id} = useParams()
-    const {connection, connID} = useContext(ConnectionContext)
+    const {connection} = useContext(ConnectionContext)
 
     useEffect(() => {
-        let error = ''
-        console.log('serverConnection: ', connID)
+        let busy = false
         console.log('myConnection', connection?.connectionId)
         fetch(`${host}/Requirement/download`, {
             method: 'POST',
@@ -44,7 +42,7 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
         })
             .then(res => {
                 if (res.status === 400) {
-                    error = '213'
+                    busy = true
                 }
                 return res.text()
             })
@@ -54,9 +52,9 @@ const HtmlEditor: FC<HtmlEditorProps> = ({setViewObj}) => {
             })
 
         return () => {
-            if (!error) {
+            if (!busy) {
                 connection?.invoke('AccessDocument',{
-                    Status: false,
+                    State: 'Exist',
                     DocumentId: id
                 })
             }

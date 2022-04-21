@@ -14,13 +14,13 @@ const StatusRequirementItem: FC<StatusRequirementItemProps> = ({status, progress
     const [succesText, setSuccesText] = useState('Документ сохранён')
     const navigation = useNavigate()
 
-    if (status === 'treatment') {
+    if (status === 'Treatment') {
         return (
             <CircularWithLabel />
         )
     }
 
-    if (status === 'ok') {
+    if (status === 'SuccessFetch') {
         if (succesText) {
             setTimeout(() => {setSuccesText('')}, 1000 )
             return (
@@ -29,15 +29,21 @@ const StatusRequirementItem: FC<StatusRequirementItemProps> = ({status, progress
         }
     }
 
-    if (status === 'loading') {
+    if (status === 'Loading') {
         return (
             <ProgressWithLabel value={progress}/>
         )
     }
 
-    if (status === 'notDoc') {
+    if (status === 'NotDoc') {
         return (
             <p className={"item-info-text"}>Документ отсутствует</p>
+        )
+    }
+
+    if (status === 'Busy') {
+        return (
+            <p className={"item-info-text"}>Документ на данный момент занят</p>
         )
     }
 

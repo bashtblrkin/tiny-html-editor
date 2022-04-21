@@ -1,14 +1,17 @@
-import React, {useCallback} from 'react';
+import React, {Dispatch, FC, memo, SetStateAction, useEffect} from 'react';
 
 import './RequirementsList.scss';
-import {host} from "../../Environment";
-import {useFetch} from "../../hooks/fetch.hooks";
 import {RequirementItem} from "../../interfaces/interfaces";
 import RequirementsItem from "./RequirementsItem/RequirementsItem";
 
-const RequirementsList = () => {
+interface RequirementsListProps {
+    data: RequirementItem[] | undefined
+    loading: boolean
+    error: string
+    setData: Dispatch<SetStateAction<RequirementItem[] | undefined>>
+}
 
-    const { data, loading, error, setData } = useFetch<RequirementItem[]>(`${host}/Requirement/all`, useCallback(resp => resp.json(), []))
+const RequirementsList: FC<RequirementsListProps> = ({data,loading,error,setData}) => {
 
     if (loading) {
         return (
@@ -26,11 +29,13 @@ const RequirementsList = () => {
         )
     }
 
+
+
     return (
         <div className="req-list">
             {data && data.map((requirement, idx) => {
                 return (<div key={requirement.id}>
-                    <RequirementsItem requirement={requirement} docStatus={requirement.id ? 'exist' : 'notDoc'} setData={setData}/>
+                    <RequirementsItem requirement={requirement} docStatus={requirement.state} setData={setData}/>
                     {idx !== data.length - 1 && <hr/>}
                     </div>)
             })}
@@ -38,4 +43,4 @@ const RequirementsList = () => {
     );
 };
 
-export default RequirementsList;
+export default memo(RequirementsList);

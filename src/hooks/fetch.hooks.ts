@@ -12,7 +12,9 @@ export const useFetch = <T>(uri: string, callbackResponse: (resp: Response) => P
             .then(callbackResponse)
             .then(setData)
             .then(() => setLoading(false))
-            .catch(setError)
+            .catch(err => {
+                setError(err)
+            })
     }, [callbackResponse, uri])
 
     return {
